@@ -18,21 +18,30 @@ var destination = "";
 var firstTrainTime;
 var frequency;
 
+
 database.ref().on("value", function (snapshot) {
+    $("tbody").empty();
+    snapshot.forEach(function(snapshot){
+        var s = snapshot.val();
+    $("<tr><td>"+s.name +"</td><td>"+ s.destination+"</td><td>"+s.frequency +"</td><td></td><td></td></tr>").appendTo("tbody");
+    });
 
 
 }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
 });
 
-
 $("#add-train").on("click", function (event) {
     event.preventDefault();
 
     trainName= $("#train-name-input").val();
+    $("#train-name-input").val("");
     destination= $("#destination-input").val();
+    $("#destination-input").val("");
     firstTrainTime= $("#first-train-time").val();
+    $("#first-train-time").val("");
     frequency= $("#frequency-input").val();
+    $("#frequency-input").val("");
 
 
     database.ref().push({
@@ -40,5 +49,6 @@ $("#add-train").on("click", function (event) {
         destination: destination,
         firstTime: firstTrainTime,
         frequency: frequency,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 });
