@@ -21,9 +21,16 @@ var frequency;
 
 database.ref().on("value", function (snapshot) {
     $("tbody").empty();
-    snapshot.forEach(function(snapshot){
+    snapshot.forEach(function (snapshot) {
         var s = snapshot.val();
-    $("<tr><td>"+s.name +"</td><td>"+ s.destination+"</td><td>"+s.frequency +"</td><td></td><td></td></tr>").appendTo("tbody");
+        var tRemainder = moment().diff(moment(s.firstTime), "minutes") % s.frequency;
+        
+        console.log(tRemainder);
+        var tMinutes = s.frequency - tRemainder;
+        console.log(tMinutes);
+        var tArrival = moment().add(tMinutes, "m").format("hh:mm A");
+        console.log(tArrival);
+        $("<tr><td>" + s.name + "</td><td>" + s.destination + "</td><td>" + s.frequency + "</td><td>" + tArrival + "</td><td>" + tMinutes + "</td></tr>").appendTo("tbody");
     });
 
 
@@ -34,13 +41,13 @@ database.ref().on("value", function (snapshot) {
 $("#add-train").on("click", function (event) {
     event.preventDefault();
 
-    trainName= $("#train-name-input").val();
+    trainName = $("#train-name-input").val();
     $("#train-name-input").val("");
-    destination= $("#destination-input").val();
+    destination = $("#destination-input").val();
     $("#destination-input").val("");
-    firstTrainTime= $("#first-train-time").val();
+    firstTrainTime = $("#first-train-time").val();
     $("#first-train-time").val("");
-    frequency= $("#frequency-input").val();
+    frequency = $("#frequency-input").val();
     $("#frequency-input").val("");
 
 
@@ -49,6 +56,5 @@ $("#add-train").on("click", function (event) {
         destination: destination,
         firstTime: firstTrainTime,
         frequency: frequency,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 });
