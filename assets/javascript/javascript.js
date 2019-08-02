@@ -23,7 +23,9 @@ database.ref().on("value", function (snapshot) {
     $("tbody").empty();
     snapshot.forEach(function (snapshot) {
         var s = snapshot.val();
-        var tRemainder = moment().diff(moment(s.firstTime), "minutes") % s.frequency;
+
+        var firstTrainNew = moment(s.firstTime, "hh:mm A").subtract(1,"years");
+        var tRemainder = moment().diff(moment(firstTrainNew), "minutes") % s.frequency;
         
         console.log(tRemainder);
         var tMinutes = s.frequency - tRemainder;
